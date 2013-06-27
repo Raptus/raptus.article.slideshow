@@ -12,5 +12,5 @@ Components
 ----------
 
 plone.portaltop
-``````````````````````
+```````````````
 - raptus.article.slideshow
