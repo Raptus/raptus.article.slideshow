@@ -10,8 +10,6 @@
 }
 
 .slideshow-header .wrapped {
-  margin:0 auto;
-  max-width:<dtml-var portalMaxWidth missing="1280px">;
   position:relative;
   height:100%;
 }
