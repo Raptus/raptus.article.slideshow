@@ -4,17 +4,14 @@ var slideshow = {
 
 (function($) {
 
-  var container;
-  var timer = false;
-
   slideshow.init = function(container) {
-    container = container;
     container.find(slideshow.selector).each(slideshow.create);
   };
 
   slideshow.create = function() {
     var touch = !!('ontouchstart' in window) || !!('onmsgesturechange' in window);
-    var slides = $(this).find('> li');
+    var container = $(this);
+    var slides = container.find('> li');
     slides.each(function() {
       var content = $(this).find('> .wrapped > .content');
       var nav = $('<ul class="visualNoMarker nextprevious" />');
@@ -33,7 +30,16 @@ var slideshow = {
           }
         });
     });
-    slideshow.auto();
+    var interval = window.setInterval(function() {
+      if(!container)
+        return window.clearInterval(interval);
+      var current = container.find('> li.current');
+      if(!current.size())
+        current = container.find('> li:first-child');
+      if(!current.size())
+        return window.clearInterval(interval);
+      current.find('.nextprevious .next').trigger('click');
+    }, 8000);
   };
 
   function swap(hide, show) {
@@ -55,8 +61,6 @@ var slideshow = {
   }
 
   slideshow.next = function(e) {
-    if(timer)
-      slideshow.auto();
     var slide = $(this).closest('.slideshow > li');
     var next = slide.next('li');
     if(!next.size())
@@ -65,8 +69,6 @@ var slideshow = {
   };
 
   slideshow.prev = function(e) {
-    if(timer)
-      slideshow.auto();
     var slide = $(this).closest('.slideshow > li');
     var prev = slide.prev('li');
     if(!prev.size())
@@ -74,17 +76,11 @@ var slideshow = {
     swap(slide, prev);
   };
 
-  slideshow.auto = function() {
-    if(timer)
-      window.clearTimeout(timer);
-    timer = window.setTimeout(function() {
-      $.proxy(slideshow.next, container.find('li.current a.next'))();
-      slideshow.auto();
-    }, 8000);
-  };
-
   $(document).ready(function() {
     slideshow.init($('body'));
+    $('.viewletmanager').on('viewlets.updated', function(e) {
+      slideshow.init($(this));
+    });
   });
 
 })(jQuery);
