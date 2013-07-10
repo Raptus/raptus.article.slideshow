@@ -32,7 +32,7 @@ class Component(object):
     description = _(u'Renders the contained articles in a slideshow.')
     image = '++resource++slideshow.gif'
     interface = ISlideshow
-    viewlet = 'swisshaus.article.slideshow'
+    viewlet = 'raptus.article.slideshow'
 
     def __init__(self, context):
         self.context = context
